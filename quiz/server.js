@@ -37,6 +37,16 @@ app.get('/read/usernames', (req, res) => {
   res.send(usernames);
 });
 
+app.get('/read/username/:name', (req, res) => {
+  const username = req.params.name;
+  const user = users.find(user => user.username === username);
+  if (user) {
+    res.json({ id: user.id, username: user.username, email: user.email });
+  } else {
+    res.status(404).json({ error: 'User not found' });
+  }
+});
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/write/adduser', addMsgToRequest);
@@ -50,6 +60,8 @@ app.post('/write/adduser', (req, res) => {
   });
   res.send('done');
 })
+
+
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
